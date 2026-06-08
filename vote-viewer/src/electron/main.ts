@@ -101,7 +101,8 @@ function createWindow() {
         mainWindow.loadFile(
             path.join(
                 app.getAppPath(),
-                "/dist-react/index.html"
+                "dist-react",
+                "index.html"
             )
         );
 
@@ -114,6 +115,12 @@ const whenReady = async () => {
 };
 
 app.whenReady().then(whenReady);
+
+app.on('window-all-closed', () => {
+    if (process.platform != 'darwin') {
+        app.quit();
+    }
+})
 
 
 ipcMainHandle('run-udp', (port: number) => {
