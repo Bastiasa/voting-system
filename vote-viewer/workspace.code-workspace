@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Administrador de votos"
+		}
+	],
+	"settings": {
+		"actionButtons": {
+			"commands": [
+				{
+					"name": "Development",
+					"command": "npm run dev",
+					"singleInstance": true
+				},
+				{
+					"name": "Run electron",
+					"command": "npm run dev:electron",
+					"singleInstance": true
+				}
+			],
+			"defaultColor": "white",
+			"reloadButton": "↻",
+			"loadNpmCommands": false
+		}
+	}
+}

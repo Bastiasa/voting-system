@@ -1,0 +1,45 @@
+@property --bg-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: "<angle>";
+}
+
+@keyframes border-image-animation {
+    to {
+        --bg-angle: 360deg;
+    }
+}
+
+
+.candidate-vote-button {
+
+    box-sizing: border-box;
+
+    --bg-angle: 0;
+    cursor: pointer;
+    scale: 1;
+    border: 1px solid white;
+
+
+    background: transparent;
+
+    transition: scale 200ms ease-out;
+    transition-property: outline, scale, border, background;
+}
+
+.candidate-vote-button:hover {
+    z-index: 200;
+    scale: 1.1;
+
+    background:
+        /* Background colors don’t work with `background-origin`, so use a gradient. */
+        linear-gradient(to bottom,
+            oklch(0.1 0.2 240 / 0.95),
+            oklch(0.1 0.2 240 / 0.95)) padding-box,
+        /* ends at inner border edges */
+        conic-gradient(from var(--bg-angle) in oklch longer hue,
+            oklch(0.85 0.37 0) 0 0) border-box;
+
+    border: 6px solid transparent;
+    animation: border-image-animation 500ms linear infinite;
+}

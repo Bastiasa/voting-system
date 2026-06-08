@@ -1,0 +1,35 @@
+#main_topbanner {
+    position: fixed;
+    height: fit-content;
+
+    left: 0;
+    right: 0;
+
+    transform: translateY(0);
+
+    transition: transform 200ms ease;
+
+    top: 0;
+
+    background-color: rgba(0, 0, 0, 0.612);
+    padding: 20px;
+
+    z-index: 500;
+}
+
+#main_topbanner.hidden {
+    transform: translateY(-100%);
+}
+
+#main_topbanner * {
+    color: white;
+}
+
+#main_topbanner input[type=number],
+#main_topbanner .button {
+    padding: 8px;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 6px;
+    cursor: pointer;
+}

@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ESNext",
+        "module": "NodeNext",
+        "outDir": "../../dist-electron",
+        "skipDefaultLibCheck": true,
+        "removeComments": true, // Borra comentarios innecesarios
+        "noEmitHelpers": true, // Evita helpers duplicados
+        "downlevelIteration": false, // Evita código extra para iteraciones
+        "stripInternal": true, // Elimina tipos internos innecesarios
+        "declaration": false, // No genera archivos .d.ts
+        "sourceMap": false, // No genera mapas de depuración
+        "types": [
+            "../../types"
+        ]
+    }
+}

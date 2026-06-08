@@ -1,0 +1,49 @@
+{
+  "name": "vote-viewer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist-electron/main.js",
+
+  "engines": {
+    "node": "24.12.0"
+  },
+  "author": {
+    "name": "Luis Bastidas",
+    "email": "leysantqm@gmail.com",
+    "url": "https://bastiasa.github.io/portfolio"
+  },
+  "scripts": {
+    "transpile:electron": "tsc --project src/electron/tsconfig.json",
+    "dev:electron": "npm run transpile:electron && cross-env NODE_ENV=development electron .",
+    "dev:react": "vite",
+    "dev": "npm-run-all --parallel dev:electron dev:react",
+    "build": "vite build && npm run transpile:electron && electron-builder .",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "dist": "electron-builder --win --ia32"
+  },
+  "dependencies": {
+    "dgram": "^1.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "electron": "^34.1.1",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0"
+  }
+}

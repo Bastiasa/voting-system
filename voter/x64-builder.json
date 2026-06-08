@@ -1,0 +1,17 @@
+{
+    "appId":"com.iersb.votador",
+    "icon":"src/ui/assets/rsb_logo.png",
+    "files":["dist-electron", "dist-react"],
+    "extraResources": ["dist-electron/preload.cjs"],
+
+    "productName":"votador64",
+    "executableName":"votador64",
+
+
+    "win": {
+        "target":["portable"],
+        "executableName":"votador64",
+        "artifactName": "votador64.${ext}"
+
+    }
+}

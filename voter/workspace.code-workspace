@@ -1,0 +1,41 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"actionButtons": {
+			"commands": [
+				{
+					"name": "Build & run",
+					"command": "powershell -ExecutionPolicy ByPass -File \"b:\\web\\Sistema de votaciones IERSB\\Administrador de votos\\utils\\build&run.ps1\"",
+					"singleInstance": true
+				},
+				{
+					"name": "Build",
+					"command": "npm run build && npm run transpile:electron",
+					"singleInstance": true
+				},
+				{
+					"name": "Run",
+					"command": "npm run dev:electron",
+					"singleInstance": true
+				},
+				{
+					"name": "Development",
+					"command": "npm run dev",
+					"singleInstance": true
+				},
+				{
+					"name": "Run electron",
+					"command": "npm run transpile:electron && npm run dev:electron",
+					"singleInstance": true
+				}
+			],
+			"defaultColor": "white",
+			"reloadButton": "↻",
+			"loadNpmCommands": false
+		}
+	}
+}

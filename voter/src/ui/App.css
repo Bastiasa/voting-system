@@ -1,0 +1,16 @@
+#centered-logo {
+  position: fixed;
+  width: 200px;
+  height: auto;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%) rotate3d(1, -1, 0, 33deg);
+
+  pointer-events: none;
+
+  opacity: 0.08;
+  filter: saturate(0.25);
+
+}
