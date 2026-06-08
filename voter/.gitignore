@@ -17,6 +17,8 @@ dist-electron
 node_modules
 *.local
 
+candidates_data.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
