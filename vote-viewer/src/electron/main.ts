@@ -98,10 +98,14 @@ function createWindow() {
     if (isDevelopment()) {
         mainWindow.loadURL("http://localhost:5124/");
     } else {
-        mainWindow.loadFile(path.join(
-            app.getAppPath(),
-            "/dist-react/index.html"
-        ));
+        mainWindow.loadFile(
+            path.join(
+                app.getAppPath(),
+                "/dist-react/index.html"
+            )
+        );
+
+        mainWindow.setMenu(null);
     }
 }
 

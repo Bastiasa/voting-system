@@ -248,7 +248,7 @@ function CandidateEditableDataView({ data, clean, onEdited }: {
                                 alignItems: "center",
                                 gap:"10px"
                             }}
-                        >Haga click para cambiar imagen <Icon iconName="photo_library" /></span>
+                        >Click to set the image <Icon iconName="photo_library" /></span>
                     </div>
                 }
             </div>

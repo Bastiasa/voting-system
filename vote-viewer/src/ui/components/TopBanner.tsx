@@ -12,7 +12,7 @@ export function TopBannerTools() {
     const formReference = useRef<HTMLFormElement>(null);
     const [visible, setVisible] = useState(false);
 
-    const _givenPort = parseInt(localStorage.getItem("port") ?? "8999", 16);
+    const _givenPort = parseInt(localStorage.getItem("port") ?? "8999", 10);
     const givenPort = (isFinite(_givenPort)) ? _givenPort : 8999;
 
     const { getReceivedVotesById, setCandidates, candidates } = useApplicationContext() as ApplicationContextMap;
@@ -111,7 +111,7 @@ export function TopBannerTools() {
         const port = parseInt(portInputElement.value, 10);
 
         window.electron.startUDPSocket(port);
-        localStorage.setItem("port", port.toString(16));
+        localStorage.setItem("port", port.toString(10));
     }
 
     return (

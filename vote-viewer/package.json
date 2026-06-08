@@ -17,11 +17,11 @@
     "dev:electron": "npm run transpile:electron && cross-env NODE_ENV=development electron .",
     "dev:react": "vite",
     "dev": "npm-run-all --parallel dev:electron dev:react",
-    "build": "vite build && npm run transpile:electron && electron-builder .",
+    "build": "vite build && npm run transpile:electron",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dist:win": "electron-builder --win --config x64-builder.json --x64",
-    "dist:win32": "electron-builder --win --config x32-builder.json --ia32"
+    "dist:win": "npm run build && electron-builder --win --config x64-builder.json --x64",
+    "dist:win32": "npm run build && electron-builder --win --config x32-builder.json --ia32"
   },
   "dependencies": {
     "dgram": "^1.0.1",
