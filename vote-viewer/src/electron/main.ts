@@ -17,8 +17,8 @@ const onBroadcastReceived = (message: Buffer, remoteInformation: dgram.RemoteInf
             return;
         }
 
-        console.log(decryptedMessage);
-        
+        console.log("Decrypted message:\n", decryptedMessage);
+
 
         const expectedCandidatesVotes = JSON.parse(decryptedMessage);
 
@@ -26,7 +26,7 @@ const onBroadcastReceived = (message: Buffer, remoteInformation: dgram.RemoteInf
             return;
         }
 
-        const validityMap:ValidityMap = {
+        const validityMap: ValidityMap = {
             votes: 'string',
             id: 'string'
         }
@@ -35,9 +35,9 @@ const onBroadcastReceived = (message: Buffer, remoteInformation: dgram.RemoteInf
             return;
         }
 
-        const candidateVotes = expectedCandidatesVotes as { votes: string|number, id: string};
+        const candidateVotes = expectedCandidatesVotes as { votes: string | number, id: string };
         candidateVotes.votes = parseInt(candidateVotes.votes as string, 16);
-        
+
         if (!isFinite(candidateVotes.votes)) {
             return;
         }
@@ -54,14 +54,14 @@ const onBroadcastReceived = (message: Buffer, remoteInformation: dgram.RemoteInf
     }
 }
 
-let udpSocket:dgram.Socket|null = null;
+let udpSocket: dgram.Socket | null = null;
 
 function stopSocket(callback?: () => void) {
     udpSocket?.close(callback);
 }
 
-function startSocket(port: number, callback?:()=>void) {
-    
+function startSocket(port: number, callback?: () => void) {
+
     if (udpSocket !== null) {
         stopSocket(() => startSocket(port, callback));
         return;
@@ -120,7 +120,7 @@ ipcMainHandle('run-udp', (port: number) => {
 
     return startSocket(port, () => {
         if (mainWindow) {
-            sendToWebContents(mainWindow, 'udp-bound');            
+            sendToWebContents(mainWindow, 'udp-bound');
         }
     });
 });
@@ -136,17 +136,17 @@ ipcMainHandle('candidate-data-load', async () => {
             error: new Error("Main window isn't available")
         };
     }
-    
+
     const openDialogResult = await dialog.showOpenDialog(
         mainWindow,
         {
             filters: [
                 {
                     name: "Candidatos",
-                    extensions:["cv"]
+                    extensions: ["cv"]
                 }
             ],
-            
+
             properties: ["openFile"]
         }
     );
@@ -214,7 +214,7 @@ ipcMainHandle('candidate-data-load', async () => {
                 error: -1
             }
         }
-        
+
 
         return {
             success: true,
@@ -226,7 +226,7 @@ ipcMainHandle('candidate-data-load', async () => {
         return {
             success: false,
             error: -2
-        }        
+        }
     }
 
 });

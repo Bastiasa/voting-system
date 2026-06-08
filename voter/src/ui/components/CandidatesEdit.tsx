@@ -257,7 +257,9 @@ function CandidateEditableDataView({ data, clean, onEdited }: {
             <input ref={candidateNameRef} onInput={onInputTyped} type="text" name="candidate-name" placeholder="Nombre" defaultValue={data.name} />
             <input ref={candidateIdRef} onInput={onInputTyped} type="text" name="candidate-id" placeholder="Identificador" defaultValue={data.id} />
 
-            <Button className="delete-candidate-button" onMouseUp={()=>clean?.()} style={{justifyContent:"space-between"}}>Eliminar <Icon iconName="delete"/> </Button>
+            <Button className="delete-candidate-button" onMouseUp={() => clean?.()} style={{ justifyContent: "space-between" }}>
+                Delete <Icon iconName="delete" />
+            </Button>
         </motion.div>
 
     );
@@ -282,10 +284,21 @@ function ActionButtons({
     return (
         <div style={{overflow:"auto"}}>
             <Box style={{width:"fit-content"}} direction="horizontal">
-                <Button style={{overflow:"hidden", textWrap:"nowrap"}} onMouseUp={addCandidateClicked}>Añadir candidato <Icon iconName="new_window"/> </Button>
-                <Button style={{overflow:"hidden", textWrap:"nowrap"}} onClick={importFileClicked}>Importar <Icon iconName="file_open"/> </Button>
-                <Button style={{overflow:"hidden", textWrap:"nowrap"}} onClick={exportClicked} disabled={!isAtLeastOne}>Exportar <Icon iconName="file_export"/></Button>
-                <Button style={{overflow:"hidden", textWrap:"nowrap"}} onMouseUp={cleanButtonClicked} disabled={!isAtLeastOne}>Limpiar <Icon iconName="cleaning_bucket"/> </Button>
+                <Button style={{ overflow: "hidden", textWrap: "nowrap" }} onMouseUp={addCandidateClicked}>
+                    Create candidate <Icon iconName="new_window" />
+                </Button>
+
+                <Button style={{ overflow: "hidden", textWrap: "nowrap" }} onClick={importFileClicked}>
+                    Import <Icon iconName="file_open" />
+                </Button>
+                
+                <Button style={{ overflow: "hidden", textWrap: "nowrap" }} onClick={exportClicked} disabled={!isAtLeastOne}>
+                    Export <Icon iconName="file_export" />
+                </Button>
+                
+                <Button style={{ overflow: "hidden", textWrap: "nowrap" }} onMouseUp={cleanButtonClicked} disabled={!isAtLeastOne}>
+                    Clear <Icon iconName="cleaning_bucket" />
+                </Button>
             </Box>
         </div>
 
@@ -327,7 +340,7 @@ export function CandidatesEditMenu({ }) {
 
         const candidateData: UniqueCandidateData = {
             id,
-            name: "Sin nombre",
+            name: "Unnamed",
             picture: undefined,
             key: getCandidateElementKey()
         }

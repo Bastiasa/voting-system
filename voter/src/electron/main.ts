@@ -2,8 +2,7 @@ import { app, BrowserWindow, dialog, Menu } from 'electron';
 import path from 'path';
 import { decryptAES, encryptAES, ipcMainHandle, ipcMainOnce, ipcMainSend, isDevelopment, loadValue, saveValue, validateObject } from './util.js';
 import { getPreloadPath } from './resourceManager.js';
-
-import dgram, { Socket } from 'dgram';
+import { stopBroadcasting, startBroadcasting, currentVotesForBroadcast, broadcastPort, setBroadcastPort } from './broadcasting.js';
 
 import fs from 'fs/promises';
 
@@ -17,20 +16,10 @@ const LAST_CANDIDATES_PATH = path.join(
     "candidates_data.json"
 );
 
-const BROADCASTING_ENCODING_KEY = "perro salchicha gordo bachicha";
-const BROADCAST_ADDRESS = "255.255.255.255";
-
-let currentVotesForBroadcast: Votes | undefined = undefined;
-
-let broadcastPort = -1;
-
 let mainWindow: BrowserWindow | null = null;
-
-let broadcastingSocket: Socket | null = null;
-let votesData = [];
-
 let reactReady = false;
-let votesBroadcastingInterval:NodeJS.Timeout|null = null;
+
+let votesData = [];
 
 const REACT_READY_PROMISE = new Promise<void>(resolve => {
     ipcMainOnce('ready', () => {
@@ -39,35 +28,7 @@ const REACT_READY_PROMISE = new Promise<void>(resolve => {
     });
 })
 
-function stopBroadcasting(callback?: () => void) {
 
-    if (votesBroadcastingInterval) {
-        clearInterval(votesBroadcastingInterval);
-        votesBroadcastingInterval = null;
-    }
-
-    broadcastingSocket?.close(() => {
-        broadcastingSocket = null;
-        callback?.();
-    });
-}
-
-function startBroadcasting() {
-    console.log("Starting broadcasting...");
-    
-
-    broadcastingSocket = dgram.createSocket("udp4", (message, remoteInformation) => {});
-
-    broadcastingSocket.bind(() => {
-        broadcastingSocket?.setBroadcast(true);
-        votesBroadcastingInterval = setInterval(() => broadcastVotes(), 800);
-        console.log("Broadcast started.");
-    });
-}
-
-loadValue<number>("broadcastPort", 8999).then(savedPort => {
-    broadcastPort = savedPort ?? 8999;
-});
 
 function createWindow() {
 
@@ -77,12 +38,13 @@ function createWindow() {
 
         minWidth: 800,
         minHeight: 600,
+        title: "Voter",
 
         fullscreen: false,
         resizable: true,
         useContentSize: true,
 
-        backgroundColor:"#00000090",
+        backgroundColor: "#00000090",
 
         webPreferences: {
             nodeIntegration: false,
@@ -102,50 +64,16 @@ function createWindow() {
     mainWindow = win;
 }
 
-function broadcastVotes(): void {
-    if (broadcastingSocket == null) {
-        return;
-    }
-
-    if (currentVotesForBroadcast == undefined) {
-        return;
-    }
-
-    const targetPort = (broadcastPort > 1024 && broadcastPort < 65535) ? broadcastPort : 8999;
-
-    currentVotesForBroadcast.forEach(_candidateVotes => {
-
-        let candidateVotes = {
-            ..._candidateVotes,
-            picture: undefined,
-            name: undefined,
-            votes: _candidateVotes.votes.toString(16)
-        };
-
-        candidateVotes.votes = candidateVotes.votes.toString(16);
-
-        const unsafeData = Buffer.from(JSON.stringify(candidateVotes), "utf8");
-        const safeData = encryptAES(unsafeData);
-
-        broadcastingSocket?.send(
-            safeData,
-            targetPort,
-            BROADCAST_ADDRESS
-        );
-    });
-    
-}
-
-async function readCandidatesFile(filePath: string): Promise<CandidateData[]| undefined> {
+async function readCandidatesFile(filePath: string): Promise<CandidateData[] | undefined> {
     const showErrorMessage = () => {
         if (!mainWindow) { return; }
 
         dialog.showMessageBox(mainWindow, {
-            message: `El archivo ${path.basename(filePath)} parece estar corrupto.`,
-            title: "No se pudo cargar",
-            type:'error'
+            message: `The file ${path.basename(filePath)} seems to be corrupted.`,
+            title: "Couldn't load",
+            type: 'error'
         });
-    }   
+    }
 
     try {
         const rawFileContent = await fs.readFile(filePath);
@@ -163,7 +91,7 @@ async function readCandidatesFile(filePath: string): Promise<CandidateData[]| un
         }
 
         let errorFound = false;
-        
+
         candidatesData.forEach(candidateData => {
             if (!validateObject(candidateData as Record<string, undefined | string>, {
                 _id: 'string',
@@ -171,12 +99,12 @@ async function readCandidatesFile(filePath: string): Promise<CandidateData[]| un
                 name: 'string',
                 picture: ['string', 'undefined']
             })) {
-                errorFound = true;                
+                errorFound = true;
             }
         })
 
         // console.log("Error loading", candidatesData);
-        
+
 
         if (errorFound) {
             showErrorMessage();
@@ -196,15 +124,15 @@ const exportVotes = (votes: Votes) => {
     }
 
     const saveDialogResult = dialog.showSaveDialogSync(mainWindow, {
-        filters: [{ name: "Hoja de cálculo", extensions: ["csv"] }],
-        nameFieldLabel: "Votos"
+        filters: [{ name: "Spreadsheet", extensions: ["csv"] }],
+        nameFieldLabel: "Votes"
     });
 
     if (!saveDialogResult) {
         try {
             fs.rm(LAST_VOTES_PATH);
         } finally {
-            
+
         }
         return;
     }
@@ -219,7 +147,7 @@ const exportVotes = (votes: Votes) => {
 
     const bom = '\uFEFF';
     const mainContent = [
-        "Candidato;Identificador;Votos",
+        "Candidate;ID;Votes",
         ...rows
     ].join("\n");
 
@@ -235,7 +163,7 @@ ipcMainHandle('start-broadcast', () => startBroadcasting());
 ipcMainHandle('stop-broadcast', () => stopBroadcasting());
 
 ipcMainHandle('set-broadcast-port', (port) => {
-    broadcastPort = port;
+    setBroadcastPort(port);
     saveValue("broadcastPort", port);
 });
 
@@ -244,7 +172,7 @@ ipcMainHandle('update-votes', votes => {
 });
 
 ipcMainHandle('save-candidates', candidatesData => {
-    fs.writeFile(LAST_CANDIDATES_PATH, JSON.stringify(candidatesData), {encoding:'utf-8'});
+    fs.writeFile(LAST_CANDIDATES_PATH, JSON.stringify(candidatesData), { encoding: 'utf-8' });
 });
 
 ipcMainHandle('load-candidates', async () => {
@@ -258,12 +186,12 @@ ipcMainHandle('load-candidates', async () => {
             success: true,
             result: readedContent
         } as FileReadResult<CandidateData[]>;
-        
+
     } catch (error) {
         return {
             success: false,
             error
-        } as FileReadResult<CandidateData[]>; 
+        } as FileReadResult<CandidateData[]>;
     }
 });
 
@@ -277,7 +205,7 @@ ipcMainHandle('export-candidates', candidatesData => {
         mainWindow,
         {
             filters: [{ extensions: ["cv"], name: "Candidatos" }],
-            nameFieldLabel:"Candidatos"
+            nameFieldLabel: "Candidatos"
         }
     )
         .then(result => {
@@ -289,7 +217,7 @@ ipcMainHandle('export-candidates', candidatesData => {
             const encryptedData = encryptAES(Buffer.from(stringJson, 'utf-8'));
 
             fs.writeFile(result.filePath, encryptedData);
-        }); 
+        });
 });
 
 ipcMainHandle('import-candidates', async () => {
@@ -307,7 +235,7 @@ ipcMainHandle('import-candidates', async () => {
             filters: [
                 {
                     extensions: [...cvExtensions, ...imageExtensions],
-                    name:"Candidatos e imágenes"
+                    name: "Candidatos e imágenes"
                 },
                 {
                     extensions: [...cvExtensions],
@@ -330,18 +258,18 @@ ipcMainHandle('import-candidates', async () => {
 
     const result: (CandidateData)[] = [];
 
-    await Promise.all(openResult.map(async (filePath:string) => {
-        
+    await Promise.all(openResult.map(async (filePath: string) => {
+
         const extension = path.extname(filePath.toLocaleLowerCase()).substring(1);
 
         switch (extension) {
             case 'cv':
                 const readCandidatesData = await readCandidatesFile(filePath);
-                
+
                 if (readCandidatesData) {
                     result.push(...readCandidatesData);
                 }
-                
+
                 break;
             case 'png':
             case 'jpeg':
@@ -365,8 +293,8 @@ ipcMainHandle('import-candidates', async () => {
                         return id;
                     }
 
-                    const imageContent = await fs.readFile(filePath, {encoding:"base64"});
-                    const candidateData:CandidateData = {
+                    const imageContent = await fs.readFile(filePath, { encoding: "base64" });
+                    const candidateData: CandidateData = {
                         name: "Sin nombre",
                         id: getCandidateDefaultId(),
                         picture: `data:image/${extension == "svg" ? (`${extension}+xml`) : extension};base64,${imageContent}`,
@@ -375,7 +303,7 @@ ipcMainHandle('import-candidates', async () => {
                     result.push(candidateData);
 
                 } catch (error) {
-                    
+
                 }
 
                 break;
@@ -383,9 +311,9 @@ ipcMainHandle('import-candidates', async () => {
                 return undefined
         };
     }));
-    
 
-    return result.filter(v=>v!==undefined);
+
+    return result.filter(v => v !== undefined);
 });
 
 ipcMainHandle('set-fullscreen', enabled => {
@@ -401,7 +329,11 @@ ipcMainHandle('save-votes', votes => {
         'utf-8'
     );
 
-    currentVotesForBroadcast = votes;
+    currentVotesForBroadcast.splice(0, currentVotesForBroadcast.length);
+    currentVotesForBroadcast.push(...votes);
+
+    console.log("VOTES FOR BROADCAST: ", currentVotesForBroadcast);
+
 });
 
 async function whenReady() {
@@ -412,13 +344,13 @@ async function whenReady() {
     }
 
     try {
-        const lastVotesData:CandidateVotes[] = JSON.parse((await fs.readFile(LAST_VOTES_PATH)).toString('utf-8'));
+        const lastVotesData: CandidateVotes[] = JSON.parse((await fs.readFile(LAST_VOTES_PATH)).toString('utf-8'));
 
         if (lastVotesData.length < 1) {
             return;
         }
 
-        const {response} = await dialog.showMessageBox(mainWindow, {
+        const { response } = await dialog.showMessageBox(mainWindow, {
             message: "Se encontraron votos no guardados de la última vez.\n¿Qué desea hacer?",
             type: "question",
             title: "Atención",
@@ -435,7 +367,7 @@ async function whenReady() {
         if (response === 0) {
             exportVotes(lastVotesData);
         } else if (response === 2) {
-            
+
             if (!reactReady) {
                 await REACT_READY_PROMISE;
             }
@@ -446,11 +378,11 @@ async function whenReady() {
         try {
             fs.rm(LAST_VOTES_PATH);
         } catch (error) {
-            
+
         }
 
     } catch (error) {
-        
+
     }
 }
 

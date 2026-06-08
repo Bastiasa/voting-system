@@ -9,7 +9,7 @@ import emptyPfp from '../assets/empty_pfp.png';
 import './styles/votate_menu.css';
 import { Button } from "./Button";
 
-export const DEFAULT_VOTATION_TITLE = "Haga click en el candidato que desea votar";
+export const DEFAULT_VOTATION_TITLE = "Click on the candidate you wish to vote for.";
 const CONTINUE_BUTTON_DELAY = 2;
 
 interface VoteResult {
@@ -317,7 +317,7 @@ export function VotateMenu({ }) {
                                 exit={{ opacity: 0, y: 0, transition: { duration: 0.3 } }}
                                 transition={{duration:0.5}}
                             >
-                                Su voto ha sido realizado correctamente. Por favor deje continuar al siguiente votante.
+                                Your vote has been successfully cast. Please allow the next voter to proceed.
                             </motion.p>
 
                             <motion.div
@@ -337,7 +337,7 @@ export function VotateMenu({ }) {
                                             maxWidth: "300px",
                                             margin: "0 auto"
                                         }}>
-                                        Siguiente voto
+                                        Next
                                     </Button>
                             </motion.div>
                         

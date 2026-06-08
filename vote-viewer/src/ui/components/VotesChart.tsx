@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Cell } from "recharts";
 import emptyPfp from '../assets/empty_pfp.png';
 import { useApplicationContext } from "../App";
+import { useMemo } from "react";
 
 const colors = [
   "#1E90FF",
@@ -118,11 +119,14 @@ const BarCharCustomXAxis = (props: TickProps) => {
 
 export function VotesChart() {
 
-    const { candidates, getReceivedVotesById } = useApplicationContext() as ApplicationContextMap;
-    const votesData = candidates.map(candidateData => ({
-        ...candidateData,
-        votes: getReceivedVotesById(candidateData.id)
-    }));
+    const { receivedVotes, candidates, getReceivedVotesById } = useApplicationContext();
+
+    const votesData = useMemo(() => {
+        return candidates.map(candidateData => ({
+            ...candidateData,
+            votes: getReceivedVotesById(candidateData.id)
+        }));
+    }, [candidates, receivedVotes])
 
 
     return (

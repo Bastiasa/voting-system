@@ -1,8 +1,4 @@
-// import rsbLogo from './assets/rsb_logo.png';
-import { MenuManagerProvider, useShowOnMenu, useMenuManagerContext } from './components/MenuManager';
-import { Box } from './components/Box';
-
-import rsbLogo from './assets/rsb_logo.png';
+import { MenuManagerProvider } from './components/MenuManager';
 
 import './App.css';
 import './classes.css'
@@ -137,9 +133,6 @@ function App() {
 
   return (
     <>
-      
-      <img src={rsbLogo} alt="Logo institucional" id="centered-logo" />
-      
       <MainApplicationProvider>
         <CandidatesLoader/>
         <MenuManagerProvider>
@@ -149,7 +142,6 @@ function App() {
           <CandidatesEditMenu />
         </MenuManagerProvider>
       </MainApplicationProvider>
-      
     </>
   )
 }

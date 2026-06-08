@@ -105,23 +105,23 @@ export function SettingMenu({ }) {
             <Box className="container-01">
 
                 <Box direction="horizontal">
-                    <Button title="Volver" onClick={handleOnBackButtonClicked}>
+                    <Button title="Back" onClick={handleOnBackButtonClicked}>
                         <Icon iconName="arrow_left"/>
                     </Button>
 
                     <Button
                         onClick={handleResetSettings}
-                        title="Restaurar ajustes">
+                        title="Reset settings">
                         <Icon iconName="reset_settings" />
                     </Button>
                 </Box>
 
                 <form ref={formReference} onSubmit={handleOnSettingsSubmited}>
                     <Box style={{maxWidth:"400px"}} className="centered-block">
-                        <h2>Configuración adicional</h2>
+                        <h2>Settings</h2>
 
                         <Box direction="horizontal">
-                            <h3 className="fit-width">Título de la votación</h3>
+                            <h3 className="fit-width">Voting title</h3>
                             <input
                                 ref={votationTitleReference}
                                 defaultValue={""}
@@ -132,11 +132,11 @@ export function SettingMenu({ }) {
                         </Box>
 
                         <p className="little-gray">
-                                Escriba el título que quiere que se muestra al realizar la votación. Puede dejarlo vacío.
+                                Enter the title you want to be displayed when the vote is cast. You can leave it blank.
                         </p>
 
                         <Box direction="horizontal">
-                            <h3 className="fit-width">Puerto</h3>
+                            <h3 className="fit-width">Port</h3>
                             <input
                                 ref={sendPortReference}
                                 className="fit-width"
@@ -151,10 +151,12 @@ export function SettingMenu({ }) {
                         </Box>
 
                         <p className="little-gray">
-                                Escriba el puerto al que se enviará la información de los votos a través de wifi.
+                                Enter the port to which the voting information will be sent via Wi-Fi.
                         </p>
 
-                        <Button onClick={handleAcceptButtonClicked} type="submit" style={{justifyContent:"center"}}>Aceptar</Button>
+                        <Button onClick={handleAcceptButtonClicked} type="submit" style={{ justifyContent: "center" }}>
+                            Accept
+                        </Button>
                     </Box>
                 </form>
 

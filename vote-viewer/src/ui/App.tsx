@@ -10,7 +10,7 @@ import './google_icons_fonts.css';
 const ApplicationContext = createContext<undefined | ApplicationContextMap>(undefined);
 
 export function useApplicationContext() {
-  return useContext(ApplicationContext);
+  return useContext(ApplicationContext) as ApplicationContextMap;
 }
 
 const VotesReceiver = () => {
@@ -60,8 +60,17 @@ export function ApplicationProvider({ children }: { children?: ReactNode }) {
 
     const listener = window.electron.onCandidateVotesReceived((votes: CandidateVotes, from: string) => {
       setReceivedVotesState((previous: ReceivedVotes) => {
-        const receivedAlready: object = previous[from] || {};
+        const receivedAlready: {[x:string]:number} = previous[from] || {};
 
+        let lastVotesCount = receivedAlready[votes.id];
+
+        if (lastVotesCount !== undefined && lastVotesCount === votes.votes) {
+          console.log("Prevented 001", [previous, votes, from]);
+          return previous;
+        }
+
+        console.log("Not prevented 001", [previous, votes, from]);
+        
         return {
           ...previous,
           [from]: {

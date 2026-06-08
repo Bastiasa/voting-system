@@ -138,7 +138,7 @@ export function TopBannerTools() {
                             alignItems:"center"
                         }}
                         direction='horizontal'>
-                        <p>Puerto</p>
+                        <p>Port</p>
 
                         <input
                             onChange={onPortInputChanged}
@@ -153,15 +153,15 @@ export function TopBannerTools() {
                         />
 
                         <button onClick={onImportCandidatesClicked}>
-                            Importar candidatos
+                            Import candidates
                         </button>
 
                         <button onClick={onFullscreenClicked}>
-                            Pantalla completa
+                            Fullscreen
                         </button>
 
                         <button onClick={handleSaveButton}>
-                            Guardar
+                            Save results
                         </button>
                     </Box>
                 </form>

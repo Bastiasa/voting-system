@@ -5,6 +5,7 @@
         "module": "NodeNext",
         "outDir": "../../dist-electron",
         "skipDefaultLibCheck": true,
+        "skipLibCheck": true,
         "removeComments": true, // Borra comentarios innecesarios
         "noEmitHelpers": true, // Evita helpers duplicados
         "downlevelIteration": false, // Evita código extra para iteraciones
