@@ -45,6 +45,10 @@ Click the **Import** button located in the top menu.
 
 *(If you cannot see the top menu, move your mouse cursor near the upper edge of the window to make it appear.)*
 
+## Voting example
+
+![Voting example with Apple and Orange as Candidates](.wacky/voting_example.webp)
+
 ### Network Requirements
 
 All devices must be connected to the same LAN network. Additionally, **every device must be configured to use the same communication port**.
