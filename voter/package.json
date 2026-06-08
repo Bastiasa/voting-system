@@ -9,7 +9,6 @@
     "email": "leysantqm@gmail.com",
     "url": "https://bastiasa.github.io/portfolio"
   },
-
   "engines": {
     "node": "24.12.0"
   },
@@ -26,9 +25,6 @@
     "dist:win:all": "npm-run-all -p dist:win32 dist:win"
   },
   "dependencies": {
-    "@capacitor/android": "^6.2.1",
-    "@capacitor/cli": "^6.2.1",
-    "@capacitor/core": "^6.2.1",
     "dgram": "^1.0.1",
     "framer-motion": "^12.4.1",
     "react": "^19.0.0",

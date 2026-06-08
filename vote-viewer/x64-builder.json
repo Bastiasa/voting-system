@@ -1,0 +1,20 @@
+{
+    "appId": "com.bastiasa.votesviewer",
+    "icon": "icon.votesviewer.png",
+    "files": [
+        "dist-electron",
+        "dist-react"
+    ],
+    "extraResources": [
+        "dist-electron/preload.cjs"
+    ],
+    "productName": "VotesViewer",
+    "executableName": "VotesViewer",
+    "win": {
+        "target": [
+            "portable"
+        ],
+        "executableName": "VotesViewer",
+        "artifactName": "VotesViewer.${ext}"
+    }
+}

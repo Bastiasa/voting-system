@@ -1,17 +1,20 @@
 {
-    "appId":"com.iersb.votador",
-    "icon":"src/ui/assets/rsb_logo.png",
-    "files":["dist-electron", "dist-react"],
-    "extraResources": ["dist-electron/preload.cjs"],
-
-    "productName":"votador64",
-    "executableName":"votador64",
-
-
+    "appId": "com.bastiasa.votador",
+    "icon": "icon.voter.png",
+    "files": [
+        "dist-electron",
+        "dist-react"
+    ],
+    "extraResources": [
+        "dist-electron/preload.cjs"
+    ],
+    "productName": "Voter",
+    "executableName": "Voter",
     "win": {
-        "target":["portable"],
-        "executableName":"votador64",
-        "artifactName": "votador64.${ext}"
-
+        "target": [
+            "portable"
+        ],
+        "executableName": "Voter",
+        "artifactName": "Voter.${ext}"
     }
 }

@@ -1,5 +1,11 @@
 # Voting System
 
+![Release](https://img.shields.io/github/v/release/Bastiasa/voting-system)
+![License](https://img.shields.io/github/license/Bastiasa/voting-system)
+![Platform](https://img.shields.io/badge/Platform-Windows-blue)
+![Electron](https://img.shields.io/badge/Electron-34.1.0-47848F?logo=electron&logoColor=white)
+![React](https://img.shields.io/badge/React-19.x-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-6.1.0-646CFF?logo=vite&logoColor=white)
 ## Features
 
 * Works without an Internet connection.
